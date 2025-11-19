@@ -1,0 +1,15 @@
+services:
+  oracle:
+    image: container-registry.oracle.com/database/express:latest
+    container_name: ${ORACLE_CONTAINER_NAME}
+    restart: unless-stopped
+    environment:
+      ORACLE_PWD: ${ORACLE_PWD}
+      ORACLE_CHARACTERSET: ${ORACLE_CHARACTERSET}
+    ports:
+      - "${ORACLE_PORT}:1521"
+    volumes:
+      - oracle_data:/opt/oracle/oradata
+
+volumes:
+  oracle_data:

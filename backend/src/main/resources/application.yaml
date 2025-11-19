@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: shoestore-api
+  profiles:
+    default: dev
+
+server:
+  port: 8080
+  servlet:
+    context-path: /
