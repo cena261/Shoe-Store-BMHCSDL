@@ -32,5 +32,5 @@ build/
 ### VS Code ###
 .vscode/
 
-backend/claude/
-/backend/claude/
+backend/specs/
+/backend/specs/
