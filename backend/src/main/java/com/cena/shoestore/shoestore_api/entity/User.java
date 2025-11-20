@@ -40,7 +40,6 @@ public class User {
     @Column(name = "LASTLOGIN")
     Instant lastLogin;
 
-    // số 0/1 → Integer
     @Column(name = "ISACTIVE", nullable = false)
     Integer isActive;
 

@@ -61,13 +61,8 @@ public class AuthService {
 
         user = userRepository.save(user);
 
-        Role defaultRole = roleRepository.findByRoleName("USER")
-                .orElseGet(() -> {
-                    Role newRole = Role.builder()
-                            .roleName("USER")
-                            .build();
-                    return roleRepository.save(newRole);
-                });
+        Role defaultRole = roleRepository.findByRoleName("User")
+                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
 
         UserRole userRole = UserRole.builder()
                 .userId(user.getUserId())
@@ -77,18 +72,18 @@ public class AuthService {
 
         userRoleRepository.save(userRole);
 
-        List<String> roles = List.of("USER");
+        List<String> roles = List.of("User");
 
         org.springframework.security.core.userdetails.UserDetails userDetails =
                 org.springframework.security.core.userdetails.User.builder()
                         .username(user.getEmail())
                         .password(user.getPasswordHash())
-                        .authorities("ROLE_USER")
+                        .authorities("ROLE_User")
                         .build();
 
         String token = jwtService.generateToken(userDetails, user.getUserId(), roles);
 
-        UserResponse userResponse = mapToUserResponse(user, Set.of("USER"));
+        UserResponse userResponse = mapToUserResponse(user, Set.of("User"));
 
         log.info("User registered successfully: {}", user.getEmail());
 

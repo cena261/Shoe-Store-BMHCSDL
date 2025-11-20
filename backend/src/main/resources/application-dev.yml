@@ -16,6 +16,13 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
+#        dialect: org.hibernate.dialect.Oracle12cDialect
+        timezone:
+          default_storage: NORMALIZE
+        jdbc:
+          time_zone: UTC+7
+        type:
+          preferred_instant_jdbc_type: TIMESTAMP
 
   flyway:
     enabled: true
