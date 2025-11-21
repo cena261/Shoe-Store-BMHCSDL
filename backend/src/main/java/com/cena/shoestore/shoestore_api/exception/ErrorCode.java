@@ -31,6 +31,9 @@ public enum ErrorCode {
     ORDER_NOT_FOUND(4001, "Order not found", HttpStatus.NOT_FOUND),
     ORDER_CANNOT_CANCEL(4002, "Order cannot be cancelled", HttpStatus.BAD_REQUEST),
     INVALID_ORDER_STATUS(4003, "Invalid order status", HttpStatus.BAD_REQUEST),
+    ORDER_ACCESS_DENIED(4004, "You do not have access to this order", HttpStatus.FORBIDDEN),
+    INVALID_ORDER_STATUS_TRANSITION(4005, "Invalid order status transition", HttpStatus.BAD_REQUEST),
+    OUT_OF_STOCK(4006, "Product is out of stock", HttpStatus.BAD_REQUEST),
 
     CART_EMPTY(5001, "Cart is empty", HttpStatus.BAD_REQUEST),
     CART_ITEM_NOT_FOUND(5002, "Cart item not found", HttpStatus.NOT_FOUND),
