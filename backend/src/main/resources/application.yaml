@@ -12,3 +12,6 @@ server:
 jwt:
   secret-key: ${JWT_SECRET_KEY:rCkoRPAEwHHe01qYBnuZ+UXzKpfMfvcQKCMbL+Uy0ULSUBVHPx6dyoKZEaD0mrrcHSoNB0ypVWjLpb39Q0SQAw==}
   expiration: 86400000
+
+encryption:
+  secret-key: ${ENCRYPTION_SECRET_KEY:ShoeStoreAES128}
