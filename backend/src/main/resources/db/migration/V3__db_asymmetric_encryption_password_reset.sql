@@ -1,3 +1,8 @@
+/* ============================================
+   ShoeStore – Database-Level Symmetric Encryption
+   V3__db_asymmetric_encryption_password_reset.sql
+
+   ============================================ */
 ALTER TABLE PASSWORDRESETTOKENS MODIFY (CODE NVARCHAR2(2000));
 
 CREATE OR REPLACE PACKAGE SHOE_ASYM_CRYPTO AS

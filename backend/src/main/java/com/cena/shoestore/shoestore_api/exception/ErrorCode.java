@@ -52,6 +52,12 @@ public enum ErrorCode {
 
     REVIEW_EXISTED(9001, "You have already reviewed this product", HttpStatus.BAD_REQUEST),
     REVIEW_NOT_FOUND(9002, "Review not found", HttpStatus.NOT_FOUND),
+
+    ORDER_EXPORT_NOT_FOUND(10001, "Order export not found", HttpStatus.NOT_FOUND),
+    ORDER_EXPORT_ACCESS_DENIED(10002, "You do not have access to this export", HttpStatus.FORBIDDEN),
+    HYBRID_ENCRYPTION_FAILED(10003, "Hybrid encryption operation failed", HttpStatus.INTERNAL_SERVER_ERROR),
+    HYBRID_DECRYPTION_FAILED(10004, "Hybrid decryption operation failed", HttpStatus.INTERNAL_SERVER_ERROR),
+    ORDER_EXPORT_SERIALIZATION_FAILED(10005, "Failed to serialize order data", HttpStatus.INTERNAL_SERVER_ERROR),
     ;
 
     private final int code;
