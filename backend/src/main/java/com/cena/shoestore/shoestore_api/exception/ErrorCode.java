@@ -71,6 +71,10 @@ public enum ErrorCode {
     VPD_CONTEXT_SET_FAILED(13001, "Failed to set VPD context", HttpStatus.INTERNAL_SERVER_ERROR),
     VPD_POLICY_ERROR(13002, "VPD policy execution error", HttpStatus.INTERNAL_SERVER_ERROR),
     VPD_CLIENT_IDENTIFIER_INVALID(13003, "Invalid VPD client identifier", HttpStatus.BAD_REQUEST),
+
+    INVALID_SECURITY_LABEL(14001, "Invalid security label - must be PUBLIC, CONFIDENTIAL, or ADMIN_ONLY", HttpStatus.BAD_REQUEST),
+    ORDER_LABEL_UPDATE_FAILED(14002, "Failed to update order security label", HttpStatus.INTERNAL_SERVER_ERROR),
+    LABEL_POLICY_VIOLATION(14003, "Access denied due to security label policy", HttpStatus.FORBIDDEN),
     ;
 
     private final int code;
