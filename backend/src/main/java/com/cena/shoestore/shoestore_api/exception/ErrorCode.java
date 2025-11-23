@@ -42,6 +42,8 @@ public enum ErrorCode {
 
     ROLE_NOT_FOUND(7001, "Role not found", HttpStatus.NOT_FOUND),
     ROLE_EXISTED(7002, "Role already exists", HttpStatus.BAD_REQUEST),
+    ROLE_ALREADY_ASSIGNED(7003, "Role already assigned to user", HttpStatus.BAD_REQUEST),
+    ROLE_NOT_ASSIGNED(7004, "Role not assigned to user", HttpStatus.BAD_REQUEST),
 
     RESET_TOKEN_INVALID(8001, "Reset token is invalid or expired", HttpStatus.BAD_REQUEST),
     RESET_TOKEN_EXPIRED(8002, "Reset token has expired", HttpStatus.BAD_REQUEST),
