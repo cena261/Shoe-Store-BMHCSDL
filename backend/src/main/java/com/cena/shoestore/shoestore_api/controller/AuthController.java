@@ -5,6 +5,7 @@ import com.cena.shoestore.shoestore_api.dto.request.RegisterRequest;
 import com.cena.shoestore.shoestore_api.dto.response.ApiResponse;
 import com.cena.shoestore.shoestore_api.dto.response.AuthResponse;
 import com.cena.shoestore.shoestore_api.service.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -39,10 +40,12 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<AuthResponse>> login(@Valid @RequestBody LoginRequest request) {
+    public ResponseEntity<ApiResponse<AuthResponse>> login(
+            @Valid @RequestBody LoginRequest request,
+            HttpServletRequest httpRequest) {
         log.info("Login request received for email: {}", request.getEmail());
 
-        AuthResponse authResponse = authService.login(request);
+        AuthResponse authResponse = authService.login(request, httpRequest);
 
         ApiResponse<AuthResponse> response = ApiResponse.<AuthResponse>builder()
                 .status("success")

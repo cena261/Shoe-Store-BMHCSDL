@@ -12,6 +12,7 @@ import com.cena.shoestore.shoestore_api.exception.ErrorCode;
 import com.cena.shoestore.shoestore_api.repository.RoleRepository;
 import com.cena.shoestore.shoestore_api.repository.UserRepository;
 import com.cena.shoestore.shoestore_api.repository.UserRoleRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -41,6 +42,7 @@ public class AuthService {
     PasswordEncoder passwordEncoder;
     JwtService jwtService;
     AuthenticationManager authenticationManager;
+    SecuritySessionService securitySessionService;
 
     @Transactional
     public AuthResponse register(RegisterRequest request) {
@@ -94,7 +96,7 @@ public class AuthService {
     }
 
     @Transactional
-    public AuthResponse login(LoginRequest request) {
+    public AuthResponse login(LoginRequest request, HttpServletRequest httpRequest) {
         log.info("Login attempt for user: {}", request.getEmail());
 
         User user = userRepository.findByEmail(request.getEmail())
@@ -124,6 +126,9 @@ public class AuthService {
 
         user.setLastLogin(Instant.now());
         userRepository.save(user);
+
+        // Log session with database context information
+        securitySessionService.logLogin(user, httpRequest);
 
         UserResponse userResponse = mapToUserResponse(user, Set.copyOf(roles));
 

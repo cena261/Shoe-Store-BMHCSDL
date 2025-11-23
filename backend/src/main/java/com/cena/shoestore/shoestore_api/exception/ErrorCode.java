@@ -58,6 +58,10 @@ public enum ErrorCode {
     HYBRID_ENCRYPTION_FAILED(10003, "Hybrid encryption operation failed", HttpStatus.INTERNAL_SERVER_ERROR),
     HYBRID_DECRYPTION_FAILED(10004, "Hybrid decryption operation failed", HttpStatus.INTERNAL_SERVER_ERROR),
     ORDER_EXPORT_SERIALIZATION_FAILED(10005, "Failed to serialize order data", HttpStatus.INTERNAL_SERVER_ERROR),
+
+    SESSION_AUDIT_NOT_FOUND(11001, "Session audit record not found", HttpStatus.NOT_FOUND),
+    SESSION_LOGGING_FAILED(11002, "Failed to log session information", HttpStatus.INTERNAL_SERVER_ERROR),
+    DB_CONTEXT_RETRIEVAL_FAILED(11003, "Failed to retrieve database context information", HttpStatus.INTERNAL_SERVER_ERROR),
     ;
 
     private final int code;
