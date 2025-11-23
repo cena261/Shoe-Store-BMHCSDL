@@ -31,25 +31,16 @@ public class SecuritySessionService {
     UserRepository userRepository;
     EntityManager entityManager;
 
-    /**
-     * Logs a successful login to the SESSION_AUDIT table with database context information.
-     *
-     * @param user    The authenticated user
-     * @param request The HTTP request containing IP and user agent
-     */
     @Transactional
     public void logLogin(User user, HttpServletRequest request) {
         try {
             log.info("Logging session for user: {}", user.getEmail());
 
-            // Extract client information from HTTP request
             String ipAddress = getClientIpAddress(request);
             String userAgent = request.getHeader("User-Agent");
 
-            // Query database context information
             Map<String, String> dbContext = getDbContextInfo();
 
-            // Create session audit entry
             SessionAudit sessionAudit = SessionAudit.builder()
                     .user(user)
                     .username(user.getEmail())
@@ -66,34 +57,24 @@ public class SecuritySessionService {
                     user.getEmail(), ipAddress, dbContext.get("DB_USER"));
 
         } catch (Exception e) {
-            // Log but don't break the login flow
             log.error("Failed to log session for user: {}", user.getEmail(), e);
         }
     }
 
-    /**
-     * Retrieves the current security context including application and database information.
-     *
-     * @return SecurityContextResponse with complete security context
-     */
     @Transactional(readOnly = true)
     public SecurityContextResponse getCurrentSecurityContext() {
         log.info("Retrieving current security context");
 
-        // Get current authenticated user
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User currentUser = userRepository.findByEmail(email)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
 
-        // Get latest session audit entry
         SessionAudit latestSession = sessionAuditRepository.findLatestByUserId(currentUser.getUserId())
                 .orElse(null);
 
-        // Query database security context
         Map<String, String> dbContext = getDbContextInfo();
         Map<String, String> tablespaceContext = getTablespaceAndProfileInfo();
 
-        // Build response
         SecurityContextResponse.SecurityContextResponseBuilder responseBuilder = SecurityContextResponse.builder()
                 .applicationUsername(currentUser.getEmail())
                 .userId(currentUser.getUserId())
@@ -107,7 +88,6 @@ public class SecuritySessionService {
                 .temporaryTablespace(tablespaceContext.get("TEMPORARY_TABLESPACE"))
                 .profileName(tablespaceContext.get("PROFILE"));
 
-        // Add latest session information if available
         if (latestSession != null) {
             responseBuilder
                     .lastLoginAt(latestSession.getLoginAt())
@@ -123,11 +103,6 @@ public class SecuritySessionService {
         return response;
     }
 
-    /**
-     * Queries database context information using SYS_CONTEXT.
-     *
-     * @return Map containing database context key-value pairs
-     */
     private Map<String, String> getDbContextInfo() {
         try {
             String sql = "SELECT " +
@@ -165,11 +140,6 @@ public class SecuritySessionService {
         }
     }
 
-    /**
-     * Queries tablespace and profile information from USER_USERS view.
-     *
-     * @return Map containing tablespace and profile information
-     */
     private Map<String, String> getTablespaceAndProfileInfo() {
         try {
             String sql = "SELECT DEFAULT_TABLESPACE, TEMPORARY_TABLESPACE " +
@@ -193,12 +163,6 @@ public class SecuritySessionService {
         }
     }
 
-    /**
-     * Extracts client IP address from HTTP request, handling proxies.
-     *
-     * @param request The HTTP request
-     * @return Client IP address
-     */
     private String getClientIpAddress(HttpServletRequest request) {
         String xForwardedFor = request.getHeader("X-Forwarded-For");
         if (xForwardedFor != null && !xForwardedFor.isEmpty()) {

@@ -1,0 +1,65 @@
+/* ============================================
+   ShoeStore – Discretionary Access Control (DAC)
+   V6__db_discretionary_access_control.sql
+   ============================================ */
+
+BEGIN
+    EXECUTE IMMEDIATE 'DROP VIEW V_ORDERS_SUMMARY';
+EXCEPTION
+    WHEN OTHERS THEN
+        IF SQLCODE != -942 THEN RAISE; END IF;
+END;
+/
+
+BEGIN
+    EXECUTE IMMEDIATE 'DROP VIEW V_USERS_SAFE';
+EXCEPTION
+    WHEN OTHERS THEN
+        IF SQLCODE != -942 THEN RAISE; END IF;
+END;
+/
+
+CREATE OR REPLACE VIEW V_USERS_SAFE AS
+SELECT
+    USERID,
+    FULLNAME,
+    CREATEDAT,
+    LASTLOGIN
+FROM USERS;
+
+COMMENT ON TABLE V_USERS_SAFE IS 'Restricted view of USERS table - excludes sensitive fields (email, phone, passwordHash)';
+COMMENT ON COLUMN V_USERS_SAFE.USERID IS 'User primary key';
+COMMENT ON COLUMN V_USERS_SAFE.FULLNAME IS 'User full name';
+COMMENT ON COLUMN V_USERS_SAFE.CREATEDAT IS 'Account creation timestamp';
+COMMENT ON COLUMN V_USERS_SAFE.LASTLOGIN IS 'Last login timestamp';
+
+CREATE OR REPLACE VIEW V_ORDERS_SUMMARY AS
+SELECT
+    ORDERID,
+    USERID,
+    ORDERDATE,
+    TOTALAMOUNT,
+    ORDERSTATUS
+FROM ORDERS;
+
+COMMENT ON TABLE V_ORDERS_SUMMARY IS 'Restricted view of ORDERS table - excludes shipping details';
+COMMENT ON COLUMN V_ORDERS_SUMMARY.ORDERID IS 'Order primary key';
+COMMENT ON COLUMN V_ORDERS_SUMMARY.USERID IS 'Foreign key to USERS table';
+COMMENT ON COLUMN V_ORDERS_SUMMARY.ORDERDATE IS 'Order placement timestamp';
+COMMENT ON COLUMN V_ORDERS_SUMMARY.TOTALAMOUNT IS 'Total order amount';
+COMMENT ON COLUMN V_ORDERS_SUMMARY.ORDERSTATUS IS 'Current order status';
+
+-- SELECT * FROM DBA_ROLES WHERE ROLE IN ('REPORT_READONLY', 'SALES_MANAGER');
+
+-- Check grants on views:
+-- SELECT * FROM DBA_TAB_PRIVS WHERE TABLE_NAME IN ('V_USERS_SAFE', 'V_ORDERS_SUMMARY');
+
+-- Check current user's roles:
+-- SELECT * FROM USER_ROLE_PRIVS;
+
+-- Check current user's table/view privileges:
+-- SELECT * FROM USER_TAB_PRIVS WHERE TABLE_NAME IN ('V_USERS_SAFE', 'V_ORDERS_SUMMARY');
+
+-- Test view access:
+-- SELECT * FROM V_USERS_SAFE WHERE ROWNUM <= 5;
+-- SELECT * FROM V_ORDERS_SUMMARY WHERE ROWNUM <= 5;

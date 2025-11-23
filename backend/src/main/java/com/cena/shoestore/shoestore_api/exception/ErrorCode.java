@@ -62,6 +62,15 @@ public enum ErrorCode {
     SESSION_AUDIT_NOT_FOUND(11001, "Session audit record not found", HttpStatus.NOT_FOUND),
     SESSION_LOGGING_FAILED(11002, "Failed to log session information", HttpStatus.INTERNAL_SERVER_ERROR),
     DB_CONTEXT_RETRIEVAL_FAILED(11003, "Failed to retrieve database context information", HttpStatus.INTERNAL_SERVER_ERROR),
+
+    DAC_RETRIEVAL_FAILED(12001, "Failed to retrieve DAC information", HttpStatus.INTERNAL_SERVER_ERROR),
+    DAC_ROLE_QUERY_FAILED(12002, "Failed to query database roles", HttpStatus.INTERNAL_SERVER_ERROR),
+    DAC_PRIVILEGE_QUERY_FAILED(12003, "Failed to query database privileges", HttpStatus.INTERNAL_SERVER_ERROR),
+    DAC_VIEW_ACCESS_DENIED(12004, "Access to restricted view denied", HttpStatus.FORBIDDEN),
+
+    VPD_CONTEXT_SET_FAILED(13001, "Failed to set VPD context", HttpStatus.INTERNAL_SERVER_ERROR),
+    VPD_POLICY_ERROR(13002, "VPD policy execution error", HttpStatus.INTERNAL_SERVER_ERROR),
+    VPD_CLIENT_IDENTIFIER_INVALID(13003, "Invalid VPD client identifier", HttpStatus.BAD_REQUEST),
     ;
 
     private final int code;
