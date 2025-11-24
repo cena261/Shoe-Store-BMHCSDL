@@ -34,6 +34,7 @@ public class PasswordResetService {
     UserRepository userRepository;
     RsaEncryptionUtil rsaEncryptionUtil;
     PasswordEncoder passwordEncoder;
+    EmailService emailService;
 
     private static final long TOKEN_EXPIRATION_MINUTES = 15;
 
@@ -69,6 +70,8 @@ public class PasswordResetService {
         passwordResetTokenRepository.save(resetToken);
 
         log.info("Password reset token created and encrypted with RSA for email: {}", request.getEmail());
+
+        emailService.sendPasswordResetEmail(request.getEmail(), encryptedToken);
 
         return ForgotPasswordResponse.builder()
                 .message("Password reset token sent successfully. Please check your email.")

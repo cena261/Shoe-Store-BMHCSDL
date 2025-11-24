@@ -51,6 +51,7 @@ public enum ErrorCode {
     RESET_TOKEN_NOT_FOUND(8004, "Reset token not found", HttpStatus.NOT_FOUND),
     RSA_VERIFICATION_FAILED(8005, "RSA signature verification failed", HttpStatus.BAD_REQUEST),
     RSA_ENCRYPTION_FAILED(8006, "RSA encryption operation failed", HttpStatus.INTERNAL_SERVER_ERROR),
+    EMAIL_SEND_FAILED(8007, "Failed to send email", HttpStatus.INTERNAL_SERVER_ERROR),
 
     REVIEW_EXISTED(9001, "You have already reviewed this product", HttpStatus.BAD_REQUEST),
     REVIEW_NOT_FOUND(9002, "Review not found", HttpStatus.NOT_FOUND),
