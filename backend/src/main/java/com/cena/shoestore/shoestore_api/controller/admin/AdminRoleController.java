@@ -6,6 +6,13 @@ import com.cena.shoestore.shoestore_api.dto.response.RoleResponse;
 import com.cena.shoestore.shoestore_api.dto.response.UserRolesResponse;
 import com.cena.shoestore.shoestore_api.dto.response.UserSummaryResponse;
 import com.cena.shoestore.shoestore_api.service.RoleManagementService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -22,13 +29,35 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
+@Tag(name = "Admin - Role Management", description = "Admin endpoints for RBAC (Role-Based Access Control). Assign/revoke roles to users. Requires Admin role and Bearer authentication.")
+@SecurityRequirement(name = "bearerAuth")
 @PreAuthorize("hasRole('Admin')")
 public class AdminRoleController {
 
     RoleManagementService roleManagementService;
 
     @GetMapping("/users/{userId}/roles")
-    public ResponseEntity<ApiResponse<UserRolesResponse>> getUserRoles(@PathVariable Long userId) {
+    @Operation(
+            summary = "Get roles assigned to a specific user",
+            description = "Retrieve all roles assigned to a user. Part of RBAC demonstration."
+    )
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "200",
+                    description = "User roles retrieved successfully",
+                    content = @Content(schema = @Schema(implementation = UserRolesResponse.class))
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "403",
+                    description = "Forbidden - Admin role required"
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "404",
+                    description = "User not found"
+            )
+    })
+    public ResponseEntity<ApiResponse<UserRolesResponse>> getUserRoles(
+            @Parameter(description = "User ID") @PathVariable Long userId) {
         log.info("GET /admin/users/{}/roles - Get user roles", userId);
 
         UserRolesResponse userRoles = roleManagementService.getUserRoles(userId);
