@@ -13,15 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * Admin controller for Discretionary Access Control (DAC) endpoints.
- *
- * Exposes database-level access control information including roles, privileges,
- * and restricted view data to demonstrate DAC implementation.
- *
- * Course Requirement #6: Business functions implementing DAC at the database level
- * through roles, privileges (GRANT/REVOKE), and restricted views.
- */
 @RestController
 @RequestMapping("/admin/security/dac")
 @RequiredArgsConstructor
