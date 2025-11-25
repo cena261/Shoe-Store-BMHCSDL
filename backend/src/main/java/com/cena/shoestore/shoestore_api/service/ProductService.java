@@ -163,14 +163,15 @@ public class ProductService {
             }
         }
 
-        String mainImageUrl = getMainImageUrl(product);
-
         return styleColorMap.values().stream()
-                .map(variant -> ColorVariantResponse.builder()
-                        .styleColor(variant.getStyleColor())
-                        .colorName(variant.getColorName())
-                        .mainImageUrl(mainImageUrl)
-                        .build())
+                .map(variant -> {
+                    String imageUrl = getMainImageUrlForStyle(product, variant.getStyleColor());
+                    return ColorVariantResponse.builder()
+                            .styleColor(variant.getStyleColor())
+                            .colorName(variant.getColorName())
+                            .mainImageUrl(imageUrl)
+                            .build();
+                })
                 .collect(Collectors.toList());
     }
 
@@ -242,6 +243,19 @@ public class ProductService {
         return product.getImages().stream()
                 .min(Comparator.comparing(ProductImage::getDisplayOrder, Comparator.nullsLast(Comparator.naturalOrder()))
                         .thenComparing(ProductImage::getImageId))
+                .map(ProductImage::getImageUrl)
+                .orElse(null);
+    }
+
+    private String getMainImageUrlForStyle(Product product, String styleColor) {
+        if (product.getImages() == null || product.getImages().isEmpty()) {
+            return null;
+        }
+
+        return product.getImages().stream()
+                .filter(img -> styleColor != null && styleColor.equals(img.getStyleColor()))
+                .filter(img -> img.getDisplayOrder() != null && img.getDisplayOrder() == 1)
+                .findFirst()
                 .map(ProductImage::getImageUrl)
                 .orElse(null);
     }

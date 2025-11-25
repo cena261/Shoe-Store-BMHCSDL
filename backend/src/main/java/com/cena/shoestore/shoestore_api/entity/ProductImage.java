@@ -28,4 +28,7 @@ public class ProductImage {
 
     @Column(name = "DISPLAYORDER")
     Integer displayOrder;
+
+    @Column(name = "STYLECOLOR", length = 50)
+    String styleColor;
 }
