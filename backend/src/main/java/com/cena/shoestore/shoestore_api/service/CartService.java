@@ -144,7 +144,9 @@ public class CartService {
         BigDecimal subtotal = unitPrice.multiply(BigDecimal.valueOf(cart.getQuantity()));
 
         String imageUrl = variant.getProduct().getImages().stream()
-                .filter(img -> variant.getStyleColor().equals(img.getStyleColor()) && img.getDisplayOrder() == 1)
+                .filter(img -> variant.getStyleColor().equals(img.getStyleColor())
+                        && img.getDisplayOrder() != null
+                        && img.getDisplayOrder() == 1)
                 .findFirst()
                 .map(img -> img.getImageUrl())
                 .orElse(null);
