@@ -15,9 +15,14 @@ public class CartItemResponse {
     Long cartId;
     Long variantId;
     String productName;
+    String slug;
+    String category;
     String colorName;
     String sizeValue;
     String sku;
+    String imageUrl;
+    BigDecimal price;
+    BigDecimal promotionPrice;
     BigDecimal unitPrice;
     Integer quantity;
     BigDecimal subtotal;

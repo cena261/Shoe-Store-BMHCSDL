@@ -143,13 +143,24 @@ public class CartService {
 
         BigDecimal subtotal = unitPrice.multiply(BigDecimal.valueOf(cart.getQuantity()));
 
+        String imageUrl = variant.getProduct().getImages().stream()
+                .filter(img -> variant.getStyleColor().equals(img.getStyleColor()) && img.getDisplayOrder() == 1)
+                .findFirst()
+                .map(img -> img.getImageUrl())
+                .orElse(null);
+
         return CartItemResponse.builder()
                 .cartId(cart.getCartId())
                 .variantId(variant.getVariantId())
                 .productName(variant.getProduct().getProductName())
+                .slug(variant.getProduct().getSlug())
+                .category(variant.getProduct().getCategory().getCategoryName())
                 .colorName(variant.getColorName())
                 .sizeValue(variant.getSizeValue())
                 .sku(variant.getSku())
+                .imageUrl(imageUrl)
+                .price(variant.getProduct().getPrice())
+                .promotionPrice(variant.getProduct().getPromotionPrice())
                 .unitPrice(unitPrice)
                 .quantity(cart.getQuantity())
                 .subtotal(subtotal)
