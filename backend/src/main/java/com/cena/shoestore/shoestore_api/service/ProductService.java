@@ -85,6 +85,7 @@ public class ProductService {
 
         List<ProductVariant> activeVariants = product.getVariants().stream()
                 .filter(v -> v.getIsActive() == 1)
+                .sorted(Comparator.comparing(ProductVariant::getVariantId))
                 .collect(Collectors.toList());
 
         if (activeVariants.isEmpty()) {
@@ -186,7 +187,7 @@ public class ProductService {
                     List<ProductVariant> variants = entry.getValue();
                     boolean isAvailable = variants.stream().anyMatch(v -> v.getStockQty() > 0);
                     String colorName = variants.isEmpty() ? "" : variants.get(0).getColorName();
-                    String thumbnailImage = getMainImageUrl(product);
+                    String thumbnailImage = getMainImageUrlForStyle(product, styleColor);
 
                     return ColorOptionResponse.builder()
                             .styleColor(styleColor)
@@ -229,6 +230,7 @@ public class ProductService {
         }
 
         return product.getImages().stream()
+                .filter(img -> selectedStyle != null && selectedStyle.equals(img.getStyleColor()))
                 .sorted(Comparator.comparing(ProductImage::getDisplayOrder, Comparator.nullsLast(Comparator.naturalOrder()))
                         .thenComparing(ProductImage::getImageId))
                 .map(ProductImage::getImageUrl)
