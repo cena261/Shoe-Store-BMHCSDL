@@ -107,7 +107,7 @@ const NavMenu = ({ opened, setOpened }: Props) => {
                 handleClose();
                 setFilter({
                   ...defaultFilter,
-                  kids: { boys: true, girls: true },
+                  gender: { ...defaultFilter.gender, kid: true },
                 });
               }}
               index={2}

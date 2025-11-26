@@ -19,6 +19,7 @@ const CollectionList = () => {
             title="Men"
             subtitle="See our men collection for summer"
             image={menImage}
+            linkTo="/shoes?gender=Men"
             handleClick={() =>
               setFilter({
                 ...defaultFilter,
@@ -34,6 +35,7 @@ const CollectionList = () => {
             subtitle="Fresh summer collection avaible now"
             image={womenImage}
             right
+            linkTo="/shoes?gender=Women"
             handleClick={() =>
               setFilter({
                 ...defaultFilter,
@@ -51,10 +53,14 @@ const CollectionList = () => {
             title="Kid"
             subtitle="See what we offer to kids"
             image={kidImage}
+            linkTo="/shoes?gender=Kid"
             handleClick={() =>
               setFilter({
                 ...defaultFilter,
-                kids: { boys: true, girls: true },
+                gender: {
+                  ...defaultFilter.gender,
+                  kid: true,
+                },
               })
             }
           />
@@ -63,6 +69,7 @@ const CollectionList = () => {
             subtitle="See what we have in our offer"
             image={unisexImage}
             right
+            linkTo="/shoes?gender=Unisex"
             handleClick={() =>
               setFilter({
                 ...defaultFilter,

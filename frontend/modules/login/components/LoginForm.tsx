@@ -1,24 +1,21 @@
 import { useState } from 'react';
 
-import { useApolloClient } from '@apollo/client';
 import { useFormik } from 'formik';
+import { useRouter } from 'next/router';
 
+import { authService } from '@/common/api/services/authService';
 import LoaderButton from '@/common/components/button/components/LoaderButton';
 import InputComponent from '@/common/components/input/components/InputComponent';
 import InputPasswordComponent from '@/common/components/input/components/InputPasswordComponent';
-import { LOGIN } from '@/common/graphql/mutation/LOGIN';
 import { useModal } from '@/common/recoil/modal';
 import { useLogin } from '@/common/recoil/user';
 
 import IncorrectCredentials from '../modals/IncorrectCredentials';
 
-const RegistrationForm = () => {
-  const { mutate } = useApolloClient();
-
+const LoginForm = () => {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
-
   const { handleLogin } = useLogin();
-
   const { openModal } = useModal();
 
   const formik = useFormik({
@@ -26,24 +23,17 @@ const RegistrationForm = () => {
       email: '',
       password: '',
     },
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       setLoading(true);
 
-      mutate<{
-        login: {
-          user: { username: string; email: string; id: string };
-          jwt: string;
-        };
-      }>({ mutation: LOGIN, variables: values })
-        .then((res) => {
-          if (res.data?.login)
-            handleLogin(res.data.login.user, res.data.login.jwt);
-          setLoading(false);
-        })
-        .catch(() => {
-          openModal(<IncorrectCredentials />);
-          setLoading(false);
-        });
+      try {
+        const response = await authService.login(values);
+        await handleLogin(response.user, response.token);
+        router.push('/');
+      } catch (error: any) {
+        openModal(<IncorrectCredentials />);
+        setLoading(false);
+      }
     },
     validate: (values) => {
       const errors: { [key: string]: string } = {};
@@ -106,4 +96,4 @@ const RegistrationForm = () => {
   );
 };
 
-export default RegistrationForm;
+export default LoginForm;

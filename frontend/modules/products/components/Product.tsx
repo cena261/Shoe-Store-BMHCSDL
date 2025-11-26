@@ -6,10 +6,8 @@ import Link from 'next/link';
 import { useTimeoutFn } from 'react-use';
 
 import { defaultEase } from '@/common/animations/easings';
-import { cloudinaryLoader } from '@/common/lib/cloudinaryLoader';
-
 interface Props extends SimpleProduct {
-  blurDataUrl: string;
+  blurDataUrl?: string;
 }
 
 const ProductComponent = ({
@@ -19,6 +17,7 @@ const ProductComponent = ({
     price,
     promotionPrice,
     category,
+    colorVariants,
     images: {
       data: [image],
     },
@@ -28,14 +27,21 @@ const ProductComponent = ({
 }: Props) => {
   const [active, setActive] = useState(false);
   const [overflow, setOverflow] = useState(false);
+  const [currentImage, setCurrentImage] = useState<string>('');
 
   useTimeoutFn(() => {
     setOverflow(true);
   }, 200);
 
+  const mainImageUrl = image.attributes.hash.startsWith('http')
+    ? image.attributes.hash
+    : `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080'}/images/${image.attributes.hash}`;
+
+  const displayImage = currentImage || mainImageUrl;
+
   return (
     <motion.div className="h-max w-max" layoutId={id}>
-      <Link href={slug} passHref>
+      <Link href={`/${slug}`} passHref>
         <a
           className={`block w-72 cursor-pointer ${
             overflow && 'overflow-hidden'
@@ -52,33 +58,70 @@ const ProductComponent = ({
             }}
             animate={{ scale: active ? 1.07 : 1 }}
           >
-            <Image
-              loader={cloudinaryLoader}
-              layout="raw"
-              width={image.attributes.width / 3}
-              height={image.attributes.height / 3}
-              src={image.attributes.hash}
-              alt={name}
-              quality={75}
-              className="h-full w-full object-cover"
-              placeholder="blur"
-              blurDataURL={blurDataUrl}
-            />
+            <div className="relative h-96 w-72 rounded-lg bg-gray-100 2xl:h-128 2xl:w-96">
+              <Image
+                layout="fill"
+                objectFit="cover"
+                src={displayImage}
+                alt={name}
+                quality={75}
+                className="h-full w-full rounded-lg"
+                unoptimized
+              />
+            </div>
           </motion.div>
         </a>
       </Link>
 
-      <div className="mt-2 flex justify-between px-2">
-        <div>
-          <h4 className="-mb-1 text-lg">{name}</h4>
-          <h5 className="text-zinc-500">
+      {colorVariants && colorVariants.length > 1 && (
+        <div className="mt-2 flex flex-wrap gap-2 px-2">
+          {colorVariants
+            .filter((variant) => variant.mainImageUrl)
+            .map((variant, index) => {
+              const variantImageUrl = variant.mainImageUrl.startsWith('http')
+                ? variant.mainImageUrl
+                : `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080'}/images/${variant.mainImageUrl}`;
+
+              return (
+                <Link
+                  key={`${variant.styleColor}-${index}`}
+                  href={`/${slug}?styleColor=${variant.styleColor}`}
+                  passHref
+                >
+                  <a
+                    className="h-12 w-12 cursor-pointer overflow-hidden rounded border-2 border-transparent transition-all hover:border-black"
+                    onMouseEnter={() => setCurrentImage(variantImageUrl)}
+                    onMouseLeave={() => setCurrentImage('')}
+                    title={variant.colorName}
+                  >
+                    <Image
+                      src={variantImageUrl}
+                      alt={variant.colorName}
+                      width={48}
+                      height={48}
+                      objectFit="cover"
+                      unoptimized
+                    />
+                  </a>
+                </Link>
+              );
+            })}
+        </div>
+      )}
+
+      <div className="mt-2 px-2">
+        <div className="mb-2">
+          <h4 className="text-base font-semibold">{name}</h4>
+          <h5 className="text-sm text-zinc-500">
             {category[0].toUpperCase() + category.slice(1)}
           </h5>
         </div>
-        <div className="text-right">
-          <h4 className="-mb-1 text-lg">€{promotionPrice || price}</h4>
+        <div className="text-base font-semibold">
+          {(promotionPrice || price).toLocaleString('vi-VN')}₫
           {promotionPrice && (
-            <h5 className="text-zinc-500 line-through">€{price}</h5>
+            <span className="ml-2 text-sm text-zinc-500 line-through">
+              {price.toLocaleString('vi-VN')}₫
+            </span>
           )}
         </div>
       </div>

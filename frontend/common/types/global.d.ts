@@ -4,6 +4,13 @@ export declare global {
     attributes: { width: number; height: number; hash: string };
   }
 
+  interface ColorVariant {
+    colorName: string;
+    mainImageUrl: string;
+    slug: string;
+    styleColor: string;
+  }
+
   interface SimpleProduct {
     id: string;
     attributes: {
@@ -13,6 +20,7 @@ export declare global {
       slug: string;
       color: string;
       promotionPrice: number | null;
+      colorVariants?: ColorVariant[];
       images: {
         data: Image[];
       };
@@ -59,6 +67,7 @@ export declare global {
   interface CartProduct extends SimpleProduct {
     quantity: number;
     size: number;
+    cartId?: number;
   }
 
   interface Cart {

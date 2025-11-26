@@ -58,19 +58,18 @@ const NavBar = ({ onHomePage = false }: { onHomePage?: boolean }) => {
         }}
       >
         <nav
-          className={`z-50 flex items-center justify-between py-5 px-10 transition-colors xl:px-24 2xl:px-48 ${
-            pathname === '/register' && 'text-white'
-          }`}
+          className={`z-50 flex items-center justify-between py-5 px-10 transition-colors xl:px-24 2xl:px-48 ${pathname === '/register' && 'text-white'
+            }`}
         >
           <h2>
             <Link href="/">
-              <a className="text-xl font-bold">Logo</a>
+              <a className="text-xl font-bold">Cena</a>
             </Link>
           </h2>
           <div className="hidden gap-6 px-24 md:flex">
             <NavItem
               title="Men"
-              linkTo="/shoes"
+              linkTo="/shoes?gender=Men"
               image={menImage}
               handleClick={() =>
                 setFilter({
@@ -81,7 +80,7 @@ const NavBar = ({ onHomePage = false }: { onHomePage?: boolean }) => {
             />
             <NavItem
               title="Women"
-              linkTo="/shoes"
+              linkTo="/shoes?gender=Women"
               image={womenImage}
               handleClick={() =>
                 setFilter({
@@ -92,18 +91,18 @@ const NavBar = ({ onHomePage = false }: { onHomePage?: boolean }) => {
             />
             <NavItem
               title="Kids"
-              linkTo="/shoes"
+              linkTo="/shoes?gender=Kid"
               image={kidImage}
               handleClick={() =>
                 setFilter({
                   ...defaultFilter,
-                  kids: { boys: true, girls: true },
+                  gender: { ...defaultFilter.gender, kid: true },
                 })
               }
             />
             <NavItem
               title="Unisex"
-              linkTo="/shoes"
+              linkTo="/shoes?gender=Unisex"
               image={unisexImage}
               handleClick={() =>
                 setFilter({

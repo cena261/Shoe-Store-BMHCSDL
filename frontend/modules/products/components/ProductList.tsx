@@ -17,7 +17,7 @@ const ProductList = ({ products, blurDataUrls }: ShoesPageProps) => {
   );
 
   return (
-    <div className="relative mt-4 flex w-full pt-32">
+    <div className="relative mt-4 flex w-full pt-20">
       <Filter />
       <div className="relative grid flex-1 grid-cols-[repeat(auto-fit,18rem)] justify-center gap-7 2xl:grid-cols-[repeat(auto-fit,24rem)]">
         {readyProducts.map((product) => (

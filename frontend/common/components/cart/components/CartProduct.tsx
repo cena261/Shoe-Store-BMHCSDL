@@ -28,6 +28,7 @@ const CartProduct = ({
   },
   size,
   quantity,
+  cartId,
 }: CartProduct) => {
   const [hover, setHover] = useState(false);
 
@@ -36,7 +37,7 @@ const CartProduct = ({
   const updateQuantity = useUpdateQuantity();
 
   const handleUpdateQuantity = (newQuantity: number) => {
-    updateQuantity(id, size, newQuantity);
+    updateQuantity(id, size, newQuantity, cartId);
   };
 
   const uuid = useMemo(() => uuidv4(), []);
@@ -64,14 +65,12 @@ const CartProduct = ({
               animate={{ scale: hover ? 1.07 : 1 }}
             >
               <Image
-                loader={cloudinaryLoader}
                 src={image.attributes.hash}
-                width={image.attributes.width / 5}
-                height={image.attributes.height / 5}
-                quality={50}
+                width={128}
+                height={128}
                 alt=""
-                layout="raw"
-                className=" object-cover"
+                objectFit="cover"
+                unoptimized
               />
             </motion.div>
           </a>
@@ -113,13 +112,13 @@ const CartProduct = ({
       <div className="my-3 mr-2 flex h-full flex-col items-end justify-between text-right">
         <div>
           <h4 className="font-semibold">
-            €{(promotionPrice || price) * quantity}
+            {((promotionPrice || price) * quantity).toLocaleString('vi-VN')}₫
           </h4>
-          <h5 className="mt-1 text-sm">€{promotionPrice || price}</h5>
+          <h5 className="mt-1 text-sm">{(promotionPrice || price).toLocaleString('vi-VN')}₫</h5>
         </div>
         <button
           className="btn mb-6 py-1 px-2"
-          onClick={() => removeItem(id, size)}
+          onClick={() => removeItem(id, size, cartId)}
         >
           Remove
         </button>

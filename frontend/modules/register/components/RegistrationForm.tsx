@@ -1,82 +1,76 @@
 import { useState } from 'react';
 
-import { useApolloClient } from '@apollo/client';
 import { useFormik } from 'formik';
+import { useRouter } from 'next/router';
 
+import { authService } from '@/common/api/services/authService';
 import LoaderButton from '@/common/components/button/components/LoaderButton';
 import InputComponent from '@/common/components/input/components/InputComponent';
 import InputPasswordComponent from '@/common/components/input/components/InputPasswordComponent';
-import { REGISTER } from '@/common/graphql/mutation/REGISTER';
 import { useModal } from '@/common/recoil/modal';
+import { useLogin } from '@/common/recoil/user';
 
-import EmailSent from '../modals/EmailSent';
-import { ErrorEmail, ErrorName } from '../modals/ErrorModal';
+import { ErrorEmail } from '../modals/ErrorModal';
 
 const RegistrationForm = () => {
-  const { mutate } = useApolloClient();
-
+  const router = useRouter();
   const { openModal } = useModal();
-
+  const { handleLogin } = useLogin();
   const [loading, setLoading] = useState(false);
 
   const formik = useFormik({
     initialValues: {
-      username: '',
+      fullName: '',
       email: '',
+      phone: '',
       password: '',
       confirmPassword: '',
     },
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       setLoading(true);
 
-      mutate<{ register: { user: { email: string } } }>({
-        mutation: REGISTER,
-        variables: values,
-      })
-        .then((res) => {
-          setLoading(false);
-
-          openModal(<EmailSent email={res.data?.register.user.email || ''} />);
-
-          formik.resetForm();
-        })
-        .catch((err: Error) => {
-          if (err.message === 'Email is already taken')
-            openModal(<ErrorEmail email={values.email} />);
-          else if (err.message === 'An error occurred during account creation')
-            openModal(<ErrorName name={values.username} />);
-
-          setLoading(false);
+      try {
+        const response = await authService.register({
+          email: values.email,
+          password: values.password,
+          fullName: values.fullName,
+          phone: values.phone || undefined,
         });
+
+        await handleLogin(response.user, response.token);
+        router.push('/');
+      } catch (error: any) {
+        const errorMessage = error?.response?.data?.message || error.message;
+        if (errorMessage.includes('already exists') || errorMessage.includes('existed')) {
+          openModal(<ErrorEmail email={values.email} />);
+        }
+        setLoading(false);
+      }
     },
     validate: (values) => {
       const errors: { [key: string]: string } = {};
 
-      Object.keys(values).forEach((key) => {
-        if (
-          !values[key as keyof typeof values] ||
-          values[key as keyof typeof values].length <= 2
-        ) {
-          errors[key] = 'Required';
-        }
-      });
-
-      if (values.username.length <= 2) {
-        errors.username = 'Name must be at least 3 characters';
+      if (!values.fullName || values.fullName.length < 3) {
+        errors.fullName = 'Full name must be at least 3 characters';
       }
 
-      if (
-        values.email &&
+      if (!values.email) {
+        errors.email = 'Email is required';
+      } else if (
         !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)
       ) {
         errors.email = 'Invalid email';
       }
 
-      if (values.password.length < 6) {
-        errors.password = 'Password must be at least 6 characters';
+      if (!values.password) {
+        errors.password = 'Password is required';
+      } else if (values.password.length < 8) {
+        errors.password = 'Password must be at least 8 characters';
       }
 
-      if (values.password !== values.confirmPassword) {
+      if (!values.confirmPassword) {
+        errors.confirmPassword = 'Please confirm your password';
+      } else if (values.password !== values.confirmPassword) {
         errors.confirmPassword = 'Passwords must match';
       }
 
@@ -93,10 +87,10 @@ const RegistrationForm = () => {
         onSubmit={formik.handleSubmit}
       >
         <InputComponent
-          label="Name"
-          placeholder="Enter your name..."
-          value={formik.values.username}
-          name="username"
+          label="Full Name"
+          placeholder="Enter your full name..."
+          value={formik.values.fullName}
+          name="fullName"
           handleChange={formik.handleChange}
           errors={formik.errors}
           handleBlur={formik.handleBlur}
@@ -107,6 +101,16 @@ const RegistrationForm = () => {
           placeholder="Enter your email..."
           value={formik.values.email}
           name="email"
+          handleChange={formik.handleChange}
+          errors={formik.errors}
+          handleBlur={formik.handleBlur}
+          className="border-none bg-white/25 text-zinc-100 placeholder:text-zinc-400"
+        />
+        <InputComponent
+          label="Phone (Optional)"
+          placeholder="Enter your phone number..."
+          value={formik.values.phone}
+          name="phone"
           handleChange={formik.handleChange}
           errors={formik.errors}
           handleBlur={formik.handleBlur}

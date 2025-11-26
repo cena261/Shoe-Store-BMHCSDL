@@ -6,6 +6,7 @@ interface Props {
   title: string;
   subtitle: string;
   image: StaticImageData;
+  linkTo?: string;
   handleClick: () => void;
 }
 
@@ -14,6 +15,7 @@ const Collection = ({
   title,
   subtitle,
   image,
+  linkTo = '/shoes',
   handleClick,
 }: Props) => {
   return (
@@ -40,7 +42,7 @@ const Collection = ({
       >
         <h2 className="-mb-2 text-3xl font-bold sm:text-5xl">{title}</h2>
         <h3 className=" w-2/3 text-sm">{subtitle}</h3>
-        <Link href="/shoes">
+        <Link href={linkTo}>
           <a className="btn mt-2 w-max" onClick={handleClick}>
             Explore
           </a>

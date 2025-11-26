@@ -9,12 +9,12 @@ const Footer = () => {
       <h6 className="mt-10">
         Shop by{' '}
         <a
-          href="https://github.com/kriziu"
+          href="https://github.com/cena261"
           target="_blank"
           rel="noreferrer"
           className="font-bold hover:underline"
         >
-          kriziu
+          cena
         </a>
         , all product images from{' '}
         <a

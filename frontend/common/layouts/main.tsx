@@ -42,7 +42,7 @@ const MainLayout = ({ children }: { children: JSX.Element }) => {
 
         {router.pathname !== '/' && (
           <>
-            <div className="min-h-full px-3 sm:px-10 xl:px-24 2xl:px-48">
+            <div className="min-h-full px-3 sm:px-6 xl:px-12 2xl:px-24">
               {children}
             </div>
             <Footer />
