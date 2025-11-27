@@ -19,8 +19,8 @@ const FilterGender = () => {
 
   return (
     <div>
-      <h3 className="mb-5 text-lg font-semibold">Gender</h3>
-      {['Men', 'Women', 'Unisex'].map((e) => {
+      <h3 className="mb-5 text-lg font-semibold">Category</h3>
+      {['Men', 'Women', 'Kid', 'Unisex'].map((e) => {
         const index = e.toLowerCase() as keyof typeof filter.gender;
 
         return (

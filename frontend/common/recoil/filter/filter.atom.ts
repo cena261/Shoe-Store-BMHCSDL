@@ -7,6 +7,7 @@ export const defaultFilter = {
   gender: {
     men: false,
     women: false,
+    kid: false,
     unisex: false,
   },
   kids: {
