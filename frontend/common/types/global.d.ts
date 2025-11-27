@@ -118,5 +118,6 @@ export declare global {
     email: string;
     fullName?: string;
     phone?: string;
+    roles?: string[];
   }
 }

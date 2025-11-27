@@ -29,7 +29,13 @@ const LoginForm = () => {
       try {
         const response = await authService.login(values);
         await handleLogin(response.user, response.token);
-        router.push('/');
+
+        const isAdmin = response.user.roles?.includes('Admin');
+        if (isAdmin) {
+          router.push('/admin');
+        } else {
+          router.push('/');
+        }
       } catch (error: any) {
         openModal(<IncorrectCredentials />);
         setLoading(false);

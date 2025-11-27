@@ -6,6 +6,7 @@ export const userAtom = atom<User>({
     id: '',
     username: '',
     email: '',
+    roles: [],
   },
   effects: [
     ({ setSelf, onSet }) => {

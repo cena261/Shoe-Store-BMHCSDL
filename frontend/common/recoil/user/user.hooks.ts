@@ -18,6 +18,9 @@ export const useLogin = () => {
       id: user.userId.toString(),
       email: user.email,
       username: user.fullName,
+      fullName: user.fullName,
+      phone: user.phone,
+      roles: user.roles || [],
     };
 
     localStorage.setItem('user', JSON.stringify(userForStorage));
@@ -68,7 +71,7 @@ export const useLogout = () => {
     localStorage.removeItem('user');
     localStorage.removeItem('jwt');
     localStorage.removeItem('cart');
-    setUser({ username: '', email: '', id: '' });
+    setUser({ username: '', email: '', id: '', roles: [] });
     setCart({
       opened: false,
       id: '',

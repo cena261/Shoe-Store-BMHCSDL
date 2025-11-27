@@ -22,3 +22,16 @@ export const useLoggedIn = () => {
     if (!user.id) router.push('/register');
   }, [user, router]);
 };
+
+export const useAdminOnly = () => {
+  const router = useRouter();
+  const user = useRecoilValue(userAtom);
+
+  useEffect(() => {
+    if (!user.id) {
+      router.push('/login');
+    } else if (!user.roles?.includes('Admin')) {
+      router.push('/');
+    }
+  }, [user, router]);
+};
