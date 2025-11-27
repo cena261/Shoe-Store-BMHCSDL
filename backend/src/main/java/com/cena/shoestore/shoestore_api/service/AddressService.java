@@ -9,7 +9,7 @@ import com.cena.shoestore.shoestore_api.exception.AppException;
 import com.cena.shoestore.shoestore_api.exception.ErrorCode;
 import com.cena.shoestore.shoestore_api.repository.AddressRepository;
 import com.cena.shoestore.shoestore_api.repository.UserRepository;
-import com.cena.shoestore.shoestore_api.util.AesEncryptionUtil;
+import com.cena.shoestore.shoestore_api.util.DesEncryptionUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -29,7 +29,7 @@ public class AddressService {
 
     AddressRepository addressRepository;
     UserRepository userRepository;
-    AesEncryptionUtil aesEncryptionUtil;
+    DesEncryptionUtil desEncryptionUtil;
 
     private User getCurrentUser() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -56,13 +56,10 @@ public class AddressService {
             unsetCurrentDefaultAddress(currentUser);
         }
 
-        String encryptedPhone = aesEncryptionUtil.encrypt(request.getPhone());
-        log.info("Phone number encrypted for storage");
-
         Address address = Address.builder()
                 .user(currentUser)
                 .fullName(request.getFullName())
-                .phone(encryptedPhone)
+                .phone(request.getPhone())
                 .tenDuong(request.getTenDuong())
                 .xaQuan(request.getXaQuan())
                 .tinhThanh(request.getTinhThanh())
@@ -87,11 +84,8 @@ public class AddressService {
             unsetCurrentDefaultAddress(currentUser);
         }
 
-        String encryptedPhone = aesEncryptionUtil.encrypt(request.getPhone());
-        log.info("Phone number encrypted for update");
-
         address.setFullName(request.getFullName());
-        address.setPhone(encryptedPhone);
+        address.setPhone(request.getPhone());
         address.setTenDuong(request.getTenDuong());
         address.setXaQuan(request.getXaQuan());
         address.setTinhThanh(request.getTinhThanh());
@@ -142,7 +136,7 @@ public class AddressService {
     }
 
     private AddressResponse mapToAddressResponse(Address address) {
-        String decryptedPhone = aesEncryptionUtil.decrypt(address.getPhone());
+        String decryptedPhone = desEncryptionUtil.decrypt(address.getPhone());
         log.debug("Phone number decrypted for response");
 
         return AddressResponse.builder()
