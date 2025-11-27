@@ -1,0 +1,1 @@
+change ORDERS.SHIPPINGPHONE to 255 char because the encryption will make it longer.
