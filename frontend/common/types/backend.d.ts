@@ -151,3 +151,51 @@ export interface AuthResponse {
   token: string;
   user: UserResponse;
 }
+
+export interface Address {
+  addressId: number;
+  fullName: string;
+  phone: string;
+  tenDuong: string;
+  xaQuan: string;
+  tinhThanh: string;
+  isDefault: boolean;
+}
+
+export interface CreateAddressRequest {
+  fullName: string;
+  phone: string;
+  tenDuong: string;
+  xaQuan: string;
+  tinhThanh: string;
+  isDefault: boolean;
+}
+
+export interface Order {
+  orderId: number;
+  orderDate: string;
+  orderStatus: string;
+  totalAmount: number;
+  shippingName: string;
+  shippingPhone: string;
+  shippingTenDuong: string;
+  shippingXaQuan: string;
+  shippingTinhThanh: string;
+  orderItems: OrderItem[];
+}
+
+export interface OrderItem {
+  orderItemId: number;
+  variantId: number;
+  productName: string;
+  colorName: string;
+  sizeValue: string;
+  sku: string;
+  quantity: number;
+  unitPrice: number;
+  subtotal: number;
+}
+
+export interface CreateOrderRequest {
+  addressId: number;
+}

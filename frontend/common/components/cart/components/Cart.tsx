@@ -2,21 +2,27 @@ import { useEffect, useRef } from 'react';
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { AiOutlineClose } from 'react-icons/ai';
 import { BiPackage } from 'react-icons/bi';
 import { useClickAway } from 'react-use';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 import cartAtom from '@/common/recoil/cart';
 import { useClearCart } from '@/common/recoil/cart/cart.hooks';
+import userAtom from '@/common/recoil/user';
 
 import { bgAnimation, cartAnimation } from '../animations/Cart.animations';
 import CartProduct from './CartProduct';
 
 const Cart = () => {
   const [cart, setCart] = useRecoilState(cartAtom);
+  const user = useRecoilValue(userAtom);
+  const router = useRouter();
 
   const cartRef = useRef<HTMLDivElement>(null);
+
+  const isAuthenticated = !!user.id;
 
   useClickAway(
     cartRef,
@@ -84,14 +90,26 @@ const Cart = () => {
             </h4>
           </div>
 
-          <Link href="/checkout">
-            <a
+          {isAuthenticated ? (
+            <Link href="/checkout">
+              <a
+                className="btn block w-full text-center"
+                onClick={() => setCart({ ...cart, opened: false })}
+              >
+                Checkout
+              </a>
+            </Link>
+          ) : (
+            <button
               className="btn block w-full text-center"
-              onClick={() => setCart({ ...cart, opened: false })}
+              onClick={() => {
+                setCart({ ...cart, opened: false });
+                router.push('/register');
+              }}
             >
-              Checkout
-            </a>
-          </Link>
+              Login to Checkout
+            </button>
+          )}
         </div>
       </motion.div>
     </>
