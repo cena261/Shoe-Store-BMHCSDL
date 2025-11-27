@@ -199,3 +199,34 @@ export interface OrderItem {
 export interface CreateOrderRequest {
   addressId: number;
 }
+
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ForgotPasswordResponse {
+  email: string;
+  codeLength: number;
+  expiresInMinutes: number;
+}
+
+export interface VerifyResetTokenRequest {
+  email: string;
+  code: string;
+}
+
+export interface VerifyResetTokenResponse {
+  valid: boolean;
+  message: string;
+}
+
+export interface ResetPasswordRequest {
+  email: string;
+  code: string;
+  newPassword: string;
+}
+
+export interface ResetPasswordResponse {
+  email: string;
+  passwordChanged: boolean;
+}

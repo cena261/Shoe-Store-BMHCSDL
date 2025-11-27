@@ -82,6 +82,10 @@ const LoginForm = () => {
           value={formik.values.password}
           errors={formik.errors}
           handleBlur={formik.handleBlur}
+          rightLink={{
+            href: '/forgot-password',
+            text: 'Forgot password?',
+          }}
         />
 
         <LoaderButton

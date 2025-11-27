@@ -4,6 +4,13 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 
 import { InputComponentProps } from '../types/input.types';
 
+interface InputPasswordComponentProps extends InputComponentProps {
+  rightLink?: {
+    href: string;
+    text: string;
+  };
+}
+
 const InputPasswordComponent = ({
   label,
   placeholder,
@@ -13,12 +20,20 @@ const InputPasswordComponent = ({
   value,
   errors,
   className,
-}: InputComponentProps) => {
+  rightLink,
+}: InputPasswordComponentProps) => {
   const [shown, setShown] = useState(false);
 
   return (
     <label className="flex flex-col">
-      <span className="text-lg font-semibold">{label}</span>
+      <div className="flex items-center justify-between">
+        <span className="text-lg font-semibold">{label}</span>
+        {rightLink && (
+          <a href={rightLink.href} className="text-sm underline">
+            {rightLink.text}
+          </a>
+        )}
+      </div>
       <div className="relative w-full">
         <input
           type={shown ? 'text' : 'password'}
