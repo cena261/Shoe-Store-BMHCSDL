@@ -1,5 +1,6 @@
 package com.cena.shoestore.shoestore_api.service;
 
+import com.cena.shoestore.shoestore_api.dto.request.ChangePasswordRequest;
 import com.cena.shoestore.shoestore_api.dto.request.LoginRequest;
 import com.cena.shoestore.shoestore_api.dto.request.RegisterRequest;
 import com.cena.shoestore.shoestore_api.dto.response.AuthResponse;
@@ -21,6 +22,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -138,6 +140,25 @@ public class AuthService {
                 .token(token)
                 .user(userResponse)
                 .build();
+    }
+
+    @Transactional
+    public void changePassword(ChangePasswordRequest request) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        log.info("Change password request for user: {}", email);
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPasswordHash())) {
+            log.warn("Incorrect current password provided for user: {}", email);
+            throw new AppException(ErrorCode.INCORRECT_CURRENT_PASSWORD);
+        }
+
+        user.setPasswordHash(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+
+        log.info("Password changed successfully for user: {}", email);
     }
 
     private UserResponse mapToUserResponse(User user, Set<String> roles) {

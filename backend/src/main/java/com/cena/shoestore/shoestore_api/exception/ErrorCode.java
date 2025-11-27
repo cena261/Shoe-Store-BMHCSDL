@@ -16,6 +16,7 @@ public enum ErrorCode {
     UNAUTHORIZED(1007, "You do not have permission", HttpStatus.FORBIDDEN),
     INVALID_CREDENTIALS(1008, "Invalid email or password", HttpStatus.UNAUTHORIZED),
     USER_INACTIVE(1009, "User account is inactive", HttpStatus.FORBIDDEN),
+    INCORRECT_CURRENT_PASSWORD(1010, "Current password is incorrect", HttpStatus.BAD_REQUEST),
 
     PRODUCT_NOT_FOUND(2001, "Product not found", HttpStatus.NOT_FOUND),
     PRODUCT_INACTIVE(2002, "Product is not active", HttpStatus.BAD_REQUEST),

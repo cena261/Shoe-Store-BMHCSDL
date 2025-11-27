@@ -1,5 +1,6 @@
 package com.cena.shoestore.shoestore_api.controller;
 
+import com.cena.shoestore.shoestore_api.dto.request.ChangePasswordRequest;
 import com.cena.shoestore.shoestore_api.dto.request.LoginRequest;
 import com.cena.shoestore.shoestore_api.dto.request.RegisterRequest;
 import com.cena.shoestore.shoestore_api.dto.response.ApiResponse;
@@ -88,6 +89,39 @@ public class AuthController {
                 .code("SUCCESS")
                 .message("Login successful")
                 .data(authResponse)
+                .build();
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/change-password")
+    @Operation(
+            summary = "Change password for authenticated user",
+            description = "Change password for the currently logged-in user by providing current password and new password. Requires Bearer token authentication."
+    )
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "200",
+                    description = "Password changed successfully"
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "400",
+                    description = "Current password is incorrect or new password is invalid"
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "401",
+                    description = "User not authenticated"
+            )
+    })
+    public ResponseEntity<ApiResponse<Void>> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
+        log.info("POST /auth/change-password - Change password for authenticated user");
+
+        authService.changePassword(request);
+
+        ApiResponse<Void> response = ApiResponse.<Void>builder()
+                .status("success")
+                .code("SUCCESS")
+                .message("Password changed successfully")
                 .build();
 
         return ResponseEntity.ok(response);
