@@ -25,6 +25,7 @@ public enum ErrorCode {
     INSUFFICIENT_STOCK(2005, "Insufficient stock", HttpStatus.BAD_REQUEST),
     INVALID_SLUG(2006, "Product slug already exists", HttpStatus.BAD_REQUEST),
     INVALID_SKU(2007, "Product SKU already exists", HttpStatus.BAD_REQUEST),
+    IMAGE_NOT_FOUND(2008, "Product image not found", HttpStatus.NOT_FOUND),
 
     CATEGORY_NOT_FOUND(3001, "Category not found", HttpStatus.NOT_FOUND),
     CATEGORY_EXISTED(3002, "Category already exists", HttpStatus.BAD_REQUEST),

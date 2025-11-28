@@ -160,6 +160,43 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
+    public OrderResponse getOrderByIdForAdmin(Long orderId) {
+        log.info("Admin fetching order ID: {}", orderId);
+
+        Order order = orderRepository.findByIdWithItems(orderId)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+
+        return mapToOrderResponse(order);
+    }
+
+    @Transactional
+    public void cancelOrder(Long orderId) {
+        log.info("Admin cancelling order ID: {}", orderId);
+
+        Order order = orderRepository.findByIdWithItems(orderId)
+                .orElseThrow(() -> new AppException(ErrorCode.ORDER_NOT_FOUND));
+
+        OrderStatus currentStatus = OrderStatus.valueOf(order.getOrderStatus());
+
+        if (currentStatus == OrderStatus.SUCCESS) {
+            throw new AppException(ErrorCode.INVALID_ORDER_STATUS_TRANSITION);
+        }
+
+        if (currentStatus == OrderStatus.CANCELLED) {
+            log.warn("Order ID: {} is already cancelled", orderId);
+            return;
+        }
+
+        if (currentStatus == OrderStatus.CONFIRMED || currentStatus == OrderStatus.ON_DELIVERY) {
+            restoreStock(order);
+        }
+
+        order.setOrderStatus(OrderStatus.CANCELLED.name());
+        orderRepository.save(order);
+
+        log.info("Order ID: {} cancelled successfully", orderId);
+    }
+
     @Transactional
     public OrderResponse updateOrderStatus(Long orderId, UpdateOrderStatusRequest request) {
         log.info("Updating order ID: {} to status: {}", orderId, request.getOrderStatus());
