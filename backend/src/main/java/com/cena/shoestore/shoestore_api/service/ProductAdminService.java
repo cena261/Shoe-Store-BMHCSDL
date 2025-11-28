@@ -178,6 +178,7 @@ public class ProductAdminService {
                         .product(product)
                         .imageUrl(imageReq.getImageUrl())
                         .displayOrder(imageReq.getDisplayOrder())
+                        .styleColor(imageReq.getStyleColor())
                         .build();
                 productImageRepository.save(image);
             }
@@ -256,12 +257,14 @@ public class ProductAdminService {
 
                     image.setImageUrl(imageReq.getImageUrl());
                     image.setDisplayOrder(imageReq.getDisplayOrder());
+                    image.setStyleColor(imageReq.getStyleColor());
                     productImageRepository.save(image);
                 } else {
                     ProductImage newImage = ProductImage.builder()
                             .product(product)
                             .imageUrl(imageReq.getImageUrl())
                             .displayOrder(imageReq.getDisplayOrder())
+                            .styleColor(imageReq.getStyleColor())
                             .build();
                     productImageRepository.save(newImage);
                 }
@@ -322,6 +325,7 @@ public class ProductAdminService {
                             .productId(i.getProduct().getProductId())
                             .imageUrl(i.getImageUrl())
                             .displayOrder(i.getDisplayOrder())
+                            .styleColor(i.getStyleColor())
                             .build())
                     .collect(Collectors.toList())
                 : new ArrayList<>();

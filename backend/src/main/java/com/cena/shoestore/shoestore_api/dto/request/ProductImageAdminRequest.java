@@ -20,4 +20,6 @@ public class ProductImageAdminRequest {
 
     @NotNull(message = "Display order is required")
     private Integer displayOrder;
+
+    private String styleColor;
 }

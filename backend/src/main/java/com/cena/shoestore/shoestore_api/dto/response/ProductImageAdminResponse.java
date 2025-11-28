@@ -15,4 +15,5 @@ public class ProductImageAdminResponse {
     private Long productId;
     private String imageUrl;
     private Integer displayOrder;
+    private String styleColor;
 }
