@@ -80,7 +80,7 @@ public class UserAdminService {
         }
 
         List<UserResponse> users = userPage.getContent().stream()
-                .map(this::mapToUserResponse)
+                .map(this::mapToUserResponseWithRoles)
                 .collect(Collectors.toList());
 
         return UserAdminPageResponse.builder()
