@@ -184,6 +184,9 @@ public class ProductAdminService {
             }
         }
 
+        product = productRepository.findById(product.getProductId())
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+
         return mapToAdminResponseWithDetails(product);
     }
 

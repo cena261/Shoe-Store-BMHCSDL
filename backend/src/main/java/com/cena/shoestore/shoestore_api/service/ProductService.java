@@ -229,8 +229,18 @@ public class ProductService {
             return new ArrayList<>();
         }
 
-        return product.getImages().stream()
+        List<String> matchingImages = product.getImages().stream()
                 .filter(img -> selectedStyle != null && selectedStyle.equals(img.getStyleColor()))
+                .sorted(Comparator.comparing(ProductImage::getDisplayOrder, Comparator.nullsLast(Comparator.naturalOrder()))
+                        .thenComparing(ProductImage::getImageId))
+                .map(ProductImage::getImageUrl)
+                .collect(Collectors.toList());
+
+        if (!matchingImages.isEmpty()) {
+            return matchingImages;
+        }
+
+        return product.getImages().stream()
                 .sorted(Comparator.comparing(ProductImage::getDisplayOrder, Comparator.nullsLast(Comparator.naturalOrder()))
                         .thenComparing(ProductImage::getImageId))
                 .map(ProductImage::getImageUrl)
@@ -259,7 +269,11 @@ public class ProductService {
                 .filter(img -> img.getDisplayOrder() != null && img.getDisplayOrder() == 1)
                 .findFirst()
                 .map(ProductImage::getImageUrl)
-                .orElse(null);
+                .orElseGet(() -> product.getImages().stream()
+                        .min(Comparator.comparing(ProductImage::getDisplayOrder, Comparator.nullsLast(Comparator.naturalOrder()))
+                                .thenComparing(ProductImage::getImageId))
+                        .map(ProductImage::getImageUrl)
+                        .orElse(null));
     }
 
     private SizeOptionResponse mapToSizeOption(ProductVariant variant) {
