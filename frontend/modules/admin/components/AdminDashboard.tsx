@@ -65,16 +65,42 @@ const AdminDashboard = () => {
         </div>
 
         <div className="rounded-3xl border border-zinc-200 p-8 shadow-sm">
-          <h2 className="text-2xl font-semibold">Coming Soon</h2>
+          <h2 className="text-2xl font-semibold">Management Modules</h2>
           <p className="mt-2 text-zinc-500">
-            Admin features will be implemented here:
+            Available admin features:
           </p>
-          <ul className="mt-4 space-y-2 text-zinc-600">
-            <li>• User Management</li>
-            <li>• Order Management</li>
-            <li>• Product Management</li>
-            <li>• Security & Analytics</li>
-          </ul>
+          <div className="mt-6 grid gap-4 md:grid-cols-2">
+            <button
+              onClick={() => (window.location.href = '/admin/products')}
+              className="rounded-full border border-zinc-200 bg-white px-6 py-4 text-left font-semibold transition hover:border-zinc-900 hover:bg-zinc-50"
+            >
+              <div className="text-lg">Product Management</div>
+              <div className="mt-1 text-sm font-normal text-zinc-500">
+                Manage products, variants, and images
+              </div>
+            </button>
+
+            <div className="rounded-full border border-zinc-200 bg-zinc-50 px-6 py-4 opacity-50">
+              <div className="text-lg font-semibold">User Management</div>
+              <div className="mt-1 text-sm font-normal text-zinc-500">
+                Coming soon
+              </div>
+            </div>
+
+            <div className="rounded-full border border-zinc-200 bg-zinc-50 px-6 py-4 opacity-50">
+              <div className="text-lg font-semibold">Order Management</div>
+              <div className="mt-1 text-sm font-normal text-zinc-500">
+                Coming soon
+              </div>
+            </div>
+
+            <div className="rounded-full border border-zinc-200 bg-zinc-50 px-6 py-4 opacity-50">
+              <div className="text-lg font-semibold">Security & Analytics</div>
+              <div className="mt-1 text-sm font-normal text-zinc-500">
+                Coming soon
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

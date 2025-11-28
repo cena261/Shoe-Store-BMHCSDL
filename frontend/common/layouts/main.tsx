@@ -2,13 +2,16 @@ import { useEffect, useRef } from 'react';
 
 import { ApolloProvider } from '@apollo/client';
 import { useRouter } from 'next/router';
-import { RecoilRoot } from 'recoil';
+import { RecoilRoot, useRecoilValue } from 'recoil';
 
 import Cart from '../components/cart/components/Cart';
 import Footer from '../components/footer/components/Footer';
 import ModalManager from '../components/modal/components/ModalManager';
 import NavBar from '../components/nav/components/NavBar';
+import ToastContainer from '../components/toast/ToastContainer';
 import { client } from '../graphql/client';
+import { toastState } from '../recoil/toast/toast.atom';
+import { useToast } from '../recoil/toast/toast.hooks';
 
 const MainLayout = ({ children }: { children: JSX.Element }) => {
   const router = useRouter();
@@ -36,6 +39,7 @@ const MainLayout = ({ children }: { children: JSX.Element }) => {
   return (
     <RecoilRoot>
       <ApolloProvider client={client}>
+        <ToastProvider />
         <ModalManager />
         <NavBar onHomePage={router.pathname === '/'} />
         <Cart />
@@ -53,6 +57,13 @@ const MainLayout = ({ children }: { children: JSX.Element }) => {
       </ApolloProvider>
     </RecoilRoot>
   );
+};
+
+const ToastProvider = () => {
+  const toasts = useRecoilValue(toastState);
+  const { removeToast } = useToast();
+
+  return <ToastContainer toasts={toasts} removeToast={removeToast} />;
 };
 
 export default MainLayout;

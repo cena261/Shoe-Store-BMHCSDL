@@ -230,3 +230,98 @@ export interface ResetPasswordResponse {
   email: string;
   passwordChanged: boolean;
 }
+
+export interface ChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+}
+
+export interface ProductAdminResponse {
+  productId: number;
+  productName: string;
+  slug: string;
+  categoryId: number;
+  categoryName: string;
+  description: string;
+  price: number;
+  promotionPrice?: number | null;
+  rating?: number | null;
+  isActive: number;
+  createdAt: string;
+  variants: ProductVariantAdminResponse[];
+  images: ProductImageAdminResponse[];
+}
+
+export interface ProductVariantAdminResponse {
+  variantId: number;
+  sizeValue: string;
+  colorName: string;
+  sku: string;
+  styleColor: string;
+  stockQty: number;
+  priceOverride?: number | null;
+  isActive: number;
+}
+
+export interface ProductImageAdminResponse {
+  imageId: number;
+  imageUrl: string;
+  displayOrder: number;
+  styleColor?: string;
+}
+
+export interface ProductAdminPageResponse {
+  currentPage: number;
+  pageSize: number;
+  totalElements: number;
+  totalPages: number;
+  products: ProductAdminResponse[];
+}
+
+export interface ProductAdminCreateRequest {
+  productName: string;
+  slug: string;
+  categoryId: number;
+  description?: string;
+  price: number;
+  promotionPrice?: number | null;
+  variants: ProductVariantAdminRequest[];
+  images: ProductImageAdminRequest[];
+}
+
+export interface ProductAdminUpdateRequest {
+  productName?: string;
+  slug?: string;
+  categoryId?: number;
+  description?: string;
+  price?: number;
+  promotionPrice?: number | null;
+  variants?: ProductVariantAdminRequest[];
+  images?: ProductImageAdminRequest[];
+}
+
+export interface ProductVariantAdminRequest {
+  variantId?: number | null;
+  sizeValue: string;
+  colorName: string;
+  sku: string;
+  styleColor: string;
+  stockQty: number;
+  priceOverride?: number | null;
+  isActive: number;
+}
+
+export interface ProductImageAdminRequest {
+  imageId?: number | null;
+  imageUrl: string;
+  displayOrder: number;
+  styleColor?: string;
+}
+
+export interface ProductAdminFilters {
+  search?: string;
+  categoryId?: number;
+  isActive?: number;
+  page?: number;
+  pageSize?: number;
+}

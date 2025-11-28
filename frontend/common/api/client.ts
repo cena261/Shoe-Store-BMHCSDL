@@ -24,7 +24,7 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response) => {
     if (response.data && response.data.status === 'success') {
-      return response.data.data;
+      return response.data.data !== undefined ? response.data.data : null;
     }
     return response.data;
   },
@@ -35,7 +35,10 @@ apiClient.interceptors.response.use(
         apiError.message || 'An error occurred while processing your request';
       throw new Error(errorMessage);
     }
-    throw error;
+    if (error.code === 'ECONNABORTED' || error.message === 'Network Error') {
+      throw new Error('Network error. Please check your connection and try again.');
+    }
+    throw new Error(error.message || 'An unexpected error occurred');
   }
 );
 
