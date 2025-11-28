@@ -102,7 +102,7 @@ public class ProductAdminService {
         }
 
         List<ProductAdminResponse> products = productPage.getContent().stream()
-                .map(this::mapToAdminResponse)
+                .map(this::mapToAdminResponseWithDetails)
                 .collect(Collectors.toList());
 
         return ProductAdminPageResponse.builder()
