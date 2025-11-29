@@ -325,3 +325,52 @@ export interface ProductAdminFilters {
   page?: number;
   pageSize?: number;
 }
+
+export interface UserAdminResponse {
+  userId: number;
+  email: string;
+  fullName: string;
+  phone: string;
+  createdAt: string;
+  lastLogin: string | null;
+  isActive: number;
+  roles: string[];
+}
+
+export interface UserAdminPageResponse {
+  currentPage: number;
+  pageSize: number;
+  totalElements: number;
+  totalPages: number;
+  users: UserAdminResponse[];
+}
+
+export interface UserAdminFilters {
+  search?: string;
+  isActive?: number;
+  page?: number;
+  pageSize?: number;
+}
+
+export interface UserRolesResponse {
+  userId: number;
+  email: string;
+  fullName: string;
+  roles: string[];
+}
+
+export interface UserSummaryResponse {
+  userId: number;
+  email: string;
+  fullName: string;
+  isActive: number;
+}
+
+export interface RoleResponse {
+  roleId: number;
+  roleName: string;
+}
+
+export interface AssignRoleRequest {
+  roleName: string;
+}
