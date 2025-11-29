@@ -9,6 +9,7 @@ import com.cena.shoestore.shoestore_api.enums.OrderStatus;
 import com.cena.shoestore.shoestore_api.exception.AppException;
 import com.cena.shoestore.shoestore_api.exception.ErrorCode;
 import com.cena.shoestore.shoestore_api.repository.*;
+import com.cena.shoestore.shoestore_api.util.DesEncryptionUtil;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -34,6 +35,7 @@ public class OrderService {
     UserRepository userRepository;
     AddressRepository addressRepository;
     ProductVariantRepository productVariantRepository;
+    DesEncryptionUtil desEncryptionUtil;
 
     private User getCurrentUser() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -282,13 +284,16 @@ public class OrderService {
                 .map(this::mapToOrderItemResponse)
                 .collect(Collectors.toList());
 
+        String decryptedPhone = desEncryptionUtil.decrypt(order.getShippingPhone());
+        log.debug("Phone number decrypted for order response");
+
         return OrderResponse.builder()
                 .orderId(order.getOrderId())
                 .orderDate(order.getOrderDate())
                 .orderStatus(order.getOrderStatus())
                 .totalAmount(order.getTotalAmount())
                 .shippingName(order.getShippingName())
-                .shippingPhone(order.getShippingPhone())
+                .shippingPhone(decryptedPhone)
                 .shippingTenDuong(order.getShippingTenDuong())
                 .shippingXaQuan(order.getShippingXaQuan())
                 .shippingTinhThanh(order.getShippingTinhThanh())
