@@ -90,12 +90,15 @@ const AdminDashboard = () => {
               </div>
             </button>
 
-            <div className="rounded-full border border-zinc-200 bg-zinc-50 px-6 py-4 opacity-50">
-              <div className="text-lg font-semibold">Order Management</div>
+            <button
+              onClick={() => (window.location.href = '/admin/orders')}
+              className="rounded-full border border-zinc-200 bg-white px-6 py-4 text-left font-semibold transition hover:border-zinc-900 hover:bg-zinc-50"
+            >
+              <div className="text-lg">Order Management</div>
               <div className="mt-1 text-sm font-normal text-zinc-500">
-                Coming soon
+                Manage orders and track statuses
               </div>
-            </div>
+            </button>
 
             <div className="rounded-full border border-zinc-200 bg-zinc-50 px-6 py-4 opacity-50">
               <div className="text-lg font-semibold">Security & Analytics</div>

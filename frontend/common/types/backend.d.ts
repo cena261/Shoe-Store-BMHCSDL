@@ -374,3 +374,34 @@ export interface RoleResponse {
 export interface AssignRoleRequest {
   roleName: string;
 }
+
+export interface OrderItemResponse {
+  orderItemId: number;
+  variantId: number;
+  productName: string;
+  colorName: string;
+  sizeValue: string;
+  sku: string;
+  quantity: number;
+  unitPrice: number;
+  subtotal: number;
+}
+
+export interface OrderAdminResponse {
+  orderId: number;
+  orderDate: string;
+  orderStatus: string;
+  totalAmount: number;
+  shippingName: string;
+  shippingPhone: string;
+  shippingTenDuong: string;
+  shippingXaQuan: string;
+  shippingTinhThanh: string;
+  orderItems: OrderItemResponse[];
+}
+
+export interface UpdateOrderStatusRequest {
+  orderStatus: string;
+}
+
+export type OrderStatus = 'PENDING' | 'CONFIRMED' | 'ON_DELIVERY' | 'SUCCESS' | 'CANCELLED' | 'FAILED';
