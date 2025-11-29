@@ -20,4 +20,10 @@ public interface OrderExportRepository extends JpaRepository<OrderExport, Long> 
 
     @Query("SELECT oe FROM OrderExport oe WHERE oe.createdBy = :user ORDER BY oe.createdAt DESC")
     List<OrderExport> findByCreatedByOrderByCreatedAtDesc(@Param("user") User user);
+
+    @Query(value = "SELECT * FROM ORDEREXPORTS ORDER BY CREATED_AT DESC FETCH FIRST :limit ROWS ONLY", nativeQuery = true)
+    List<OrderExport> findRecentExports(@Param("limit") int limit);
+
+    @Query(value = "SELECT * FROM ORDEREXPORTS WHERE CREATED_BY = :createdBy ORDER BY CREATED_AT DESC FETCH FIRST :limit ROWS ONLY", nativeQuery = true)
+    List<OrderExport> findRecentExportsByCreatedBy(@Param("createdBy") Long createdBy, @Param("limit") int limit);
 }

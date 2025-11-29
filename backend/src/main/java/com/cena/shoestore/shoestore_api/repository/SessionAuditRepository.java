@@ -21,4 +21,13 @@ public interface SessionAuditRepository extends JpaRepository<SessionAudit, Long
 
     @Query(value = "SELECT * FROM SESSION_AUDIT WHERE USER_ID = :userId ORDER BY LOGIN_AT DESC FETCH FIRST 1 ROWS ONLY", nativeQuery = true)
     Optional<SessionAudit> findLatestByUserId(@Param("userId") Long userId);
+
+    @Query(value = "SELECT * FROM SESSION_AUDIT ORDER BY LOGIN_AT DESC FETCH FIRST :limit ROWS ONLY", nativeQuery = true)
+    List<SessionAudit> findRecentSessions(@Param("limit") int limit);
+
+    @Query(value = "SELECT * FROM SESSION_AUDIT WHERE USER_ID = :userId ORDER BY LOGIN_AT DESC FETCH FIRST :limit ROWS ONLY", nativeQuery = true)
+    List<SessionAudit> findRecentSessionsByUserId(@Param("userId") Long userId, @Param("limit") int limit);
+
+    @Query(value = "SELECT * FROM SESSION_AUDIT WHERE USERNAME = :username ORDER BY LOGIN_AT DESC FETCH FIRST :limit ROWS ONLY", nativeQuery = true)
+    List<SessionAudit> findRecentSessionsByUsername(@Param("username") String username, @Param("limit") int limit);
 }

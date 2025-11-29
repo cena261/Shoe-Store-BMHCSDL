@@ -3,6 +3,7 @@ package com.cena.shoestore.shoestore_api.service;
 import com.cena.shoestore.shoestore_api.dto.request.ExportOrdersRequest;
 import com.cena.shoestore.shoestore_api.dto.response.ExportOrdersResponse;
 import com.cena.shoestore.shoestore_api.dto.response.OrderExportDownloadResponse;
+import com.cena.shoestore.shoestore_api.dto.response.OrderExportSummary;
 import com.cena.shoestore.shoestore_api.entity.Order;
 import com.cena.shoestore.shoestore_api.entity.OrderExport;
 import com.cena.shoestore.shoestore_api.entity.OrderItem;
@@ -176,5 +177,34 @@ public class OrderExportService {
         exportData.put("orders", orderList);
 
         return exportData;
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrderExportSummary> getExportHistory(Integer limit, Long createdBy) {
+        log.info("Retrieving export history - limit: {}, createdBy: {}", limit, createdBy);
+
+        List<OrderExport> exports;
+
+        if (createdBy != null) {
+            exports = orderExportRepository.findRecentExportsByCreatedBy(createdBy, limit);
+            log.info("Found {} exports for createdBy userId: {}", exports.size(), createdBy);
+        } else {
+            exports = orderExportRepository.findRecentExports(limit);
+            log.info("Found {} recent exports", exports.size());
+        }
+
+        return exports.stream()
+                .map(this::mapToOrderExportSummary)
+                .collect(Collectors.toList());
+    }
+
+    private OrderExportSummary mapToOrderExportSummary(OrderExport export) {
+        return OrderExportSummary.builder()
+                .exportId(export.getExportId())
+                .createdAt(export.getCreatedAt())
+                .createdBy(export.getCreatedBy().getUserId())
+                .createdByEmail(export.getCreatedBy().getEmail())
+                .encryptedDataSize((long) export.getEncryptedData().length)
+                .build();
     }
 }

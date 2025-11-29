@@ -1,6 +1,7 @@
 package com.cena.shoestore.shoestore_api.service;
 
 import com.cena.shoestore.shoestore_api.dto.response.SecurityContextResponse;
+import com.cena.shoestore.shoestore_api.dto.response.SessionAuditResponse;
 import com.cena.shoestore.shoestore_api.entity.SessionAudit;
 import com.cena.shoestore.shoestore_api.entity.User;
 import com.cena.shoestore.shoestore_api.exception.AppException;
@@ -19,7 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -175,5 +178,41 @@ public class SecuritySessionService {
         }
 
         return request.getRemoteAddr();
+    }
+
+    @Transactional(readOnly = true)
+    public List<SessionAuditResponse> getSessionAuditLogs(Integer limit, Long userId, String username) {
+        log.info("Retrieving session audit logs - limit: {}, userId: {}, username: {}",
+                limit, userId, username);
+
+        List<SessionAudit> sessions;
+
+        if (userId != null) {
+            sessions = sessionAuditRepository.findRecentSessionsByUserId(userId, limit);
+            log.info("Found {} sessions for userId: {}", sessions.size(), userId);
+        } else if (username != null) {
+            sessions = sessionAuditRepository.findRecentSessionsByUsername(username, limit);
+            log.info("Found {} sessions for username: {}", sessions.size(), username);
+        } else {
+            sessions = sessionAuditRepository.findRecentSessions(limit);
+            log.info("Found {} recent sessions", sessions.size());
+        }
+
+        return sessions.stream()
+                .map(this::mapToSessionAuditResponse)
+                .collect(Collectors.toList());
+    }
+
+    private SessionAuditResponse mapToSessionAuditResponse(SessionAudit sessionAudit) {
+        return SessionAuditResponse.builder()
+                .sessionId(sessionAudit.getSessionId())
+                .userId(sessionAudit.getUser().getUserId())
+                .username(sessionAudit.getUsername())
+                .loginAt(sessionAudit.getLoginAt())
+                .ipAddress(sessionAudit.getIpAddress())
+                .userAgent(sessionAudit.getUserAgent())
+                .dbUser(sessionAudit.getDbUser())
+                .clientIdentifier(sessionAudit.getClientIdentifier())
+                .build();
     }
 }
