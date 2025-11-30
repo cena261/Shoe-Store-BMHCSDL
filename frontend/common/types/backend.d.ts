@@ -405,3 +405,149 @@ export interface UpdateOrderStatusRequest {
 }
 
 export type OrderStatus = 'PENDING' | 'CONFIRMED' | 'ON_DELIVERY' | 'SUCCESS' | 'CANCELLED' | 'FAILED';
+
+export interface SecurityContextResponse {
+  applicationUsername: string;
+  userId: number;
+  lastLoginAt?: string;
+  lastLoginIp?: string;
+  lastLoginUserAgent?: string;
+  dbUser: string;
+  sessionUser: string;
+  dbName: string;
+  dbHost: string;
+  dbSessionId: string;
+  clientIdentifier: string;
+  defaultTablespace: string;
+  temporaryTablespace: string;
+  profileName: string;
+}
+
+export interface SessionAuditResponse {
+  sessionId: number;
+  userId: number;
+  username: string;
+  loginAt: string;
+  ipAddress: string;
+  userAgent: string;
+  dbUser: string;
+  clientIdentifier: string;
+}
+
+export interface DACInfoResponse {
+  databaseRoles: DatabaseRole[];
+  accessibleObjects: AccessibleObject[];
+  sampleUsersViewData: SafeUser[];
+  sampleOrdersViewData: SafeOrder[];
+}
+
+export interface DatabaseRole {
+  grantedRole: string;
+  adminOption: string;
+  defaultRole: string;
+}
+
+export interface AccessibleObject {
+  objectName: string;
+  objectType: string;
+  privilege: string;
+  grantable: string;
+}
+
+export interface SafeUser {
+  userId: number;
+  fullName: string;
+  createdAt: string;
+  lastLogin: string | null;
+}
+
+export interface SafeOrder {
+  orderId: number;
+  userId: number;
+  orderDate: string;
+  totalAmount: number;
+  orderStatus: string;
+}
+
+export interface VPDDebugResponse {
+  currentClientIdentifier: string;
+  currentUser: {
+    userId: number;
+    email: string;
+    roles: string[];
+  };
+  visibleOrders: OrderAdminResponse[];
+  vpdPolicyActive: boolean;
+  predicate: string;
+}
+
+export interface OrderLabelSummaryResponse {
+  labelCounts: {
+    PUBLIC: number;
+    CONFIDENTIAL: number;
+    ADMIN_ONLY: number;
+  };
+  totalOrders: number;
+  currentUserContext: string;
+}
+
+export interface OrderLabelResponse {
+  orderId: number;
+  securityLabel: string;
+}
+
+export interface UpdateOrderLabelRequest {
+  label: 'PUBLIC' | 'CONFIDENTIAL' | 'ADMIN_ONLY';
+}
+
+export type SecurityLabel = 'PUBLIC' | 'CONFIDENTIAL' | 'ADMIN_ONLY';
+
+export interface AuditLogResponse {
+  auditId: number;
+  eventTime: string;
+  username: string;
+  ipAddress: string;
+  host: string;
+  objectName: string;
+  action: 'INSERT' | 'UPDATE' | 'DELETE';
+  orderId?: number;
+  details: string;
+}
+
+export interface FGAEventResponse {
+  eventTime: string;
+  dbUser: string;
+  osUser: string;
+  host: string;
+  objectSchema: string;
+  objectName: string;
+  policyName: string;
+  clientIdentifier: string;
+  sqlText: string;
+}
+
+export interface OrderExportSummary {
+  exportId: number;
+  createdAt: string;
+  createdBy: number;
+  createdByEmail: string;
+  encryptedDataSize: number;
+}
+
+export interface ExportOrdersRequest {
+  orderStatus?: string;
+  startDate?: string;
+  endDate?: string;
+}
+
+export interface ExportOrdersResponse {
+  exportId: number;
+  createdAt: string;
+  message: string;
+}
+
+export interface OrderExportDownloadResponse {
+  exportId: number;
+  jsonData: string;
+  message: string;
+}
