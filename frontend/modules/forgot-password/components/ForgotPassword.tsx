@@ -56,8 +56,8 @@ const ForgotPassword = () => {
         'Email reset password đã được gửi đến địa chỉ email của bạn.',
       );
     } catch (error: any) {
-      const errorMessage =
-        error.response?.data?.message || 'Có lỗi xảy ra. Vui lòng thử lại.';
+      console.error('[ForgotPassword] Error:', error);
+      const errorMessage = error.message || error.response?.data?.message || 'Có lỗi xảy ra. Vui lòng thử lại.';
       setEmailFormError(errorMessage);
     } finally {
       setEmailSubmitting(false);

@@ -42,4 +42,23 @@ apiClient.interceptors.response.use(
   }
 );
 
-export default apiClient;
+const client = {
+  get: async <T = any>(url: string, config?: any): Promise<T> => {
+    console.log('[API Client] GET:', apiClient.defaults.baseURL + url);
+    return apiClient.get(url, config);
+  },
+  post: async <T = any>(url: string, data?: any, config?: any): Promise<T> => {
+    console.log('[API Client] POST:', apiClient.defaults.baseURL + url, data);
+    return apiClient.post(url, data, config);
+  },
+  put: async <T = any>(url: string, data?: any, config?: any): Promise<T> => {
+    console.log('[API Client] PUT:', apiClient.defaults.baseURL + url, data);
+    return apiClient.put(url, data, config);
+  },
+  delete: async <T = any>(url: string, config?: any): Promise<T> => {
+    console.log('[API Client] DELETE:', apiClient.defaults.baseURL + url);
+    return apiClient.delete(url, config);
+  },
+};
+
+export default client;
